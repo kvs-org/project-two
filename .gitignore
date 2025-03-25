@@ -22,3 +22,16 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+#vscode
+.vscode/
+
+#Project files
+.project
+.classpath
+subtraction/.project
+subtraction/.classpath
+subtraction/.settings/
+subtraction/bin/
+subtraction/target/
+subtraction/.vscode/
