@@ -65,3 +65,10 @@ jobs:
       # Store commit hash in a file
       - name: Save Commit Hash
         run: echo "${{ github.sha }}" > subtraction/commit-hash.txt
+
+      # Upload commit hash as an artifact
+      - name: Upload Commit Hash
+        uses: actions/upload-artifact@v3
+        with:
+          name: commit-hash
+          path: subtraction/commit-hash.txt
