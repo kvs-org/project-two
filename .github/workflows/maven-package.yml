@@ -15,6 +15,9 @@ jobs:
       # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       # Check for new commits
       - name: Check for new commits
@@ -65,11 +68,26 @@ jobs:
       - name: Save Commit Hash
         run: echo "${{ github.sha }}" > subtraction/commit-hash.txt
 
-      # Commit and push the updated commit-hash.txt file
-      - name: Commit and Push Commit Hash
+      # Create a new branch for the commit
+      - name: Create Branch
         run: |
+          git checkout -b update-commit-hash
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add subtraction/commit-hash.txt
           git commit -m "Update commit-hash.txt with latest commit hash"
-          git push origin main
+          git push origin update-commit-hash
+
+      # Create a pull request using the GitHub REST API
+      - name: Create Pull Request
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            -d '{
+              "title": "Update commit-hash.txt",
+              "body": "This pull request updates the commit-hash.txt file with the latest commit hash.",
+              "head": "update-commit-hash",
+              "base": "main"
+            }'
