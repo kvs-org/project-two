@@ -18,4 +18,6 @@ public class SubtractionController {
         int result = subtractionService.subtract(a, b);
         return ResponseEntity.ok(result);
     }
+
+    // Add more methoods here
 }
