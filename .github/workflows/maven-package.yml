@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-  # pull_request:
-  #   branches:
-  #     - main
+    paths-ignore:
+      - 'subtraction/commit-hash.txt' # Ignore pushes that only modify this file
 
 jobs:
   build:
@@ -66,9 +65,11 @@ jobs:
       - name: Save Commit Hash
         run: echo "${{ github.sha }}" > subtraction/commit-hash.txt
 
-      # Upload commit hash as an artifact
-      - name: Upload Commit Hash
-        uses: actions/upload-artifact@v4
-        with:
-          name: commit-hash
-          path: subtraction/commit-hash.txt
+      # Commit and push the updated commit-hash.txt file
+      - name: Commit and Push Commit Hash
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add subtraction/commit-hash.txt
+          git commit -m "Update commit-hash.txt with latest commit hash"
+          git push origin main
